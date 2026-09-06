@@ -1,0 +1,1521 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Cine Pobre</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --bg:#0a0d12;
+  --bg-elevated:#10141b;
+  --surface:#161b24;
+  --surface-2:#1c2330;
+  --border:#262f3d;
+  --border-soft:#1d2532;
+  --text:#eef2f7;
+  --text-dim:#94a3b5;
+  --text-faint:#5c6b7c;
+  --accent:#2fe0c0;
+  --accent-dark:#1cb79b;
+  --accent-ink:#04211c;
+  --amber:#ffb648;
+  --amber-ink:#3a2400;
+  --coral:#ff6f91;
+  --lavender:#b39ddb;
+  --paper:#f6f3ec;
+  --paper-ink:#241f1a;
+  --paper-border:#e2dccb;
+  --radius:16px;
+  --radius-sm:10px;
+  --shadow:0 12px 34px rgba(0,0,0,.4);
+  --sidebar-w:280px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',system-ui,sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  letter-spacing:-0.02em;
+}
+button,input,textarea,select{letter-spacing:inherit;}
+h1,h2,h3,.brand,.headline{font-family:'Exo 2',sans-serif;}
+.wordmark{display:inline-flex;align-items:baseline;gap:3px;font-family:'Exo 2',sans-serif;}
+.wordmark .wm-cine{font-weight:300;}
+.wordmark .wm-pobre{font-weight:700;}
+button{font-family:inherit;cursor:pointer;}
+input,textarea,select{font-family:inherit;color:inherit;}
+a{color:var(--accent);}
+::selection{background:var(--accent);color:var(--accent-ink);}
+
+/* ---------- utility ---------- */
+.hidden{display:none !important;}
+.btn{
+  border:1px solid var(--border);background:var(--surface-2);color:var(--text);
+  padding:9px 16px;border-radius:999px;font-size:13.5px;font-weight:600;
+  display:inline-flex;align-items:center;gap:6px;transition:.15s;white-space:nowrap;
+}
+.btn:hover{border-color:var(--accent);color:var(--accent);}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.btn:disabled:hover{border-color:var(--border);color:var(--text);}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
+.btn-primary:hover{background:var(--accent-dark);border-color:var(--accent-dark);color:var(--accent-ink);}
+.btn-danger:hover{border-color:var(--coral);color:var(--coral);}
+.btn-sm{padding:7px 12px;font-size:12.5px;}
+.icon-btn{
+  width:36px;height:36px;border-radius:50%;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--text);display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ---------- gate screens ---------- */
+.gate-screen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(47,224,192,.14), transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(255,111,145,.12), transparent 45%),
+    var(--bg);
+}
+.gate-card{
+  width:100%;max-width:380px;background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:36px 30px;box-shadow:var(--shadow);text-align:center;
+}
+.gate-logo{font-size:34px;margin-bottom:10px;color:var(--accent);}
+.gate-card h1{font-size:24px;margin:0 0 4px;}
+.gate-card p.sub{color:var(--text-dim);font-size:14px;margin:0 0 26px;}
+#pinInput{
+  width:100%;text-align:center;font-size:30px;letter-spacing:14px;font-weight:700;
+  background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;
+  padding:16px 10px 16px 24px;color:var(--text);margin-bottom:14px;
+}
+#pinInput:focus{outline:none;border-color:var(--accent);}
+.gate-error{color:var(--coral);font-size:13px;min-height:18px;margin-bottom:10px;}
+.gate-card .btn-primary{width:100%;justify-content:center;padding:12px;font-size:15px;}
+
+.gate-field{text-align:left;margin-bottom:14px;}
+.gate-field label{display:block;font-size:11.5px;font-weight:700;text-transform:uppercase;color:var(--text-faint);margin-bottom:7px;}
+.select-wrap{position:relative;}
+.select-wrap select{
+  width:100%;appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;
+  padding:14px 40px 14px 16px;color:var(--text);font-size:15px;font-weight:600;
+}
+.select-wrap select:focus{outline:none;border-color:var(--accent);}
+.select-wrap i{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--text-faint);pointer-events:none;font-size:13px;}
+.avatar{
+  width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Exo 2',sans-serif;font-weight:300;font-size:17px;color:#04211c;flex-shrink:0;background-size:cover;background-position:center;
+}
+
+/* ---------- shell ---------- */
+#appShell{display:none;}
+#appShell.visible{display:block;}
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--bg-elevated);
+  border-right:1px solid var(--border-soft);display:flex;flex-direction:column;z-index:50;
+  transition:transform .25s ease;overflow:hidden;
+}
+.sidebar-head{padding:20px 18px 12px;}
+.brand{display:flex;align-items:center;gap:9px;font-size:18px;margin-bottom:14px;}
+.brand i,.mobile-title i{color:var(--accent);font-size:.9em;}
+.big-logo{color:var(--accent);}
+.sidebar-head .btn-primary{width:100%;justify-content:center;}
+.sidebar-search{padding:0 18px 12px;}
+.sidebar-search input{
+  width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:9px 12px;color:var(--text);font-size:13.5px;
+}
+.sidebar-search input:focus{outline:none;border-color:var(--accent);}
+.sidebar-sections{flex:1;overflow-y:auto;padding:0 10px 10px;}
+details.seccion{margin-bottom:4px;}
+details.seccion summary{
+  list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;
+  padding:9px 8px;border-radius:10px;font-size:13px;font-weight:600;color:var(--text-dim);
+  user-select:none;
+}
+details.seccion summary::-webkit-details-marker{display:none;}
+details.seccion summary:hover{background:var(--surface);color:var(--text);}
+details.seccion summary .arrow{margin-left:auto;font-size:10px;transition:transform .15s;color:var(--text-faint);}
+details.seccion[open] summary .arrow{transform:rotate(90deg);}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.dot-guion{background:var(--accent);}
+.dot-premisa{background:var(--amber);}
+.dot-idea{background:var(--lavender);}
+.count{
+  background:var(--surface-2);color:var(--text-faint);font-size:10.5px;font-weight:700;
+  padding:1px 7px;border-radius:999px;
+}
+ul.idea-list{list-style:none;margin:0;padding:0 0 6px 4px;}
+ul.idea-list li{margin-bottom:1px;}
+.idea-link{
+  display:flex;flex-direction:column;gap:2px;width:100%;text-align:left;background:none;border:none;
+  color:var(--text);padding:8px 10px 8px 22px;border-radius:9px;font-size:13.5px;position:relative;
+}
+.idea-link:hover{background:var(--surface);}
+.idea-link.active{background:var(--surface-2);color:var(--accent);}
+.idea-link .titulo{
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;
+}
+.idea-link .meta{font-size:11px;color:var(--text-faint);display:flex;gap:6px;align-items:center;}
+.mini-avatar{width:14px;height:14px;border-radius:50%;flex-shrink:0;background-size:cover;background-position:center;}
+.empty-list-hint{color:var(--text-faint);font-size:12px;padding:6px 10px 10px 22px;}
+
+.sidebar-foot{border-top:1px solid var(--border-soft);padding:12px 14px;}
+.profile-chip{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;color:var(--text);padding:6px;border-radius:12px;text-align:left;}
+.profile-chip:hover{background:var(--surface);}
+.profile-chip .nombre{font-size:13.5px;font-weight:600;}
+.profile-chip .sub{font-size:11px;color:var(--text-faint);}
+
+.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:45;}
+.sidebar-backdrop.visible{display:block;}
+
+.main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column;}
+.mobile-topbar{
+  display:none;align-items:center;justify-content:space-between;padding:12px 14px;
+  background:var(--bg-elevated);border-bottom:1px solid var(--border-soft);position:sticky;top:0;z-index:30;
+}
+.mobile-title{font-family:'Exo 2',sans-serif;font-size:16px;display:flex;align-items:center;gap:7px;}
+.main-content{flex:1;padding:34px 40px 60px;max-width:980px;width:100%;margin:0 auto;}
+
+@media (max-width:960px){
+  .sidebar{transform:translateX(-100%);width:82vw;max-width:320px;}
+  .sidebar.open{transform:translateX(0);box-shadow:var(--shadow);}
+  .main{margin-left:0;}
+  .mobile-topbar{display:flex;}
+  .main-content{padding:20px 16px 50px;}
+}
+
+/* ---------- empty state ---------- */
+.welcome{text-align:center;padding:60px 10px;}
+.welcome .big-logo{font-size:52px;}
+.welcome h2{font-size:26px;margin:8px 0 6px;}
+.welcome p{color:var(--text-dim);max-width:420px;margin:0 auto 26px;font-size:14.5px;}
+.stats-row{display:flex;justify-content:center;gap:14px;margin-top:34px;flex-wrap:wrap;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 22px;min-width:110px;}
+.stat-card .n{font-size:24px;font-weight:700;font-family:'Exo 2',sans-serif;}
+.stat-card .l{font-size:11.5px;color:var(--text-faint);margin-top:2px;}
+
+/* ---------- idea view ---------- */
+.idea-header{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;justify-content:space-between;margin-bottom:22px;}
+.idea-title-input{
+  background:none;border:none;color:var(--text);font-family:'Exo 2',sans-serif;
+  font-size:26px;font-weight:700;width:100%;padding:2px 0;border-bottom:2px solid transparent;
+}
+.idea-title-input:focus{outline:none;border-bottom-color:var(--accent);}
+.idea-title-plain{font-family:'Exo 2',sans-serif;font-size:26px;font-weight:700;margin:0;}
+.idea-meta-row{display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap;}
+.badge{font-size:11px;font-weight:700;text-transform:uppercase;padding:3px 10px;border-radius:999px;}
+.badge-guion{background:rgba(47,224,192,.15);color:var(--accent);}
+.badge-premisa{background:rgba(255,182,72,.15);color:var(--amber);}
+.badge-idea{background:rgba(179,157,219,.18);color:var(--lavender);}
+.idea-meta-row .author{display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--text-dim);}
+.idea-meta-row .save-state{font-size:12px;color:var(--text-faint);}
+.idea-meta-row .save-state i{color:var(--accent);margin-right:2px;}
+.idea-toolbar{display:flex;gap:8px;flex-wrap:wrap;}
+
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--border-soft);margin-bottom:22px;}
+.tab-btn{
+  background:none;border:none;color:var(--text-dim);padding:10px 4px;margin-right:18px;font-size:14.5px;font-weight:600;
+  border-bottom:2px solid transparent;
+}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--accent);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+.empty-block{
+  text-align:center;padding:50px 20px;background:var(--surface);border:1px dashed var(--border);border-radius:var(--radius);
+  color:var(--text-dim);
+}
+.empty-block p{margin:0 0 18px;font-size:14.5px;}
+.empty-block .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+/* premisa */
+.field-group{margin-bottom:20px;}
+.field-group label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;color:var(--text-faint);margin-bottom:7px;}
+.field-group textarea,.field-group input[type=text]{
+  width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:12px 14px;color:var(--text);font-size:14.5px;line-height:1.55;resize:vertical;
+}
+.field-group textarea:focus,.field-group input:focus{outline:none;border-color:var(--accent);}
+.field-readonly{
+  background:var(--surface);border:1px solid var(--border-soft);border-radius:12px;padding:14px 16px;
+  font-size:14.5px;line-height:1.6;color:var(--text);white-space:pre-wrap;
+}
+.field-readonly.empty{color:var(--text-faint);font-style:italic;}
+.resumen-box{
+  border:1px dashed var(--border);border-radius:12px;padding:16px;display:flex;align-items:center;gap:14px;
+  background:var(--surface);
+}
+.resumen-box .txt{flex:1;font-size:13.5px;color:var(--text-dim);}
+.resumen-box .txt b{color:var(--text);}
+.soon-badge{font-size:10px;font-weight:700;background:var(--surface-2);color:var(--text-faint);padding:2px 8px;border-radius:999px;margin-left:6px;}
+
+/* guion detalles */
+details.guion-detalles{margin-bottom:18px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2px 16px;}
+details.guion-detalles summary{cursor:pointer;padding:12px 0;font-size:13px;font-weight:600;color:var(--text-dim);list-style:none;}
+details.guion-detalles summary::-webkit-details-marker{display:none;}
+.detalles-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-bottom:16px;}
+.detalles-grid .full{grid-column:1/-1;}
+@media (max-width:600px){.detalles-grid{grid-template-columns:1fr;}}
+.detalles-grid label{display:block;font-size:11px;color:var(--text-faint);margin-bottom:5px;font-weight:600;}
+.detalles-grid input,.detalles-grid select{
+  width:100%;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;
+  padding:8px 10px;color:var(--text);font-size:13px;
+}
+
+/* guion page (paper) */
+.guion-page{
+  background:var(--paper);color:var(--paper-ink);border-radius:10px;border:1px solid var(--paper-border);
+  padding:38px 34px 50px;box-shadow:0 18px 40px rgba(0,0,0,.35);font-family:'Courier Prime',monospace;
+  font-size:14.5px;line-height:1.65;letter-spacing:normal;
+}
+@media (max-width:600px){.guion-page{padding:24px 16px 36px;font-size:14px;}}
+.page-title{text-align:center;font-weight:700;font-size:19px;letter-spacing:.02em;margin-bottom:4px;text-transform:uppercase;}
+.page-meta{text-align:center;font-size:12px;color:#6b6459;margin-bottom:18px;}
+.page-nota{font-style:italic;font-size:12.5px;color:#5c5347;background:rgba(0,0,0,.035);border-left:3px solid #c7bfa9;padding:8px 12px;margin-bottom:20px;border-radius:4px;}
+
+.block-row{position:relative;padding:3px 0 3px 44px;margin-bottom:2px;border-radius:6px;}
+.block-row:hover,.block-row:focus-within{background:rgba(0,0,0,.03);}
+.block-gutter{position:absolute;left:0;top:2px;display:flex;flex-direction:column;gap:2px;opacity:0;transition:opacity .12s;}
+.block-row:hover .block-gutter,.block-row:focus-within .block-gutter{opacity:1;}
+.gutter-btns{display:flex;gap:2px;}
+.gutter-btns button{
+  width:19px;height:19px;font-size:10px;border-radius:4px;border:1px solid #d8d0ba;background:#fff;color:#5c5347;
+  display:flex;align-items:center;justify-content:center;line-height:1;padding:0;
+}
+.gutter-btns button:hover{border-color:#a89a70;color:#241f1a;}
+.type-select{
+  font-size:9.5px;font-weight:700;text-transform:uppercase;border-radius:4px;border:1px solid #d8d0ba;
+  background:#fff;color:#5c5347;padding:1px 2px;width:70px;
+}
+.block-field{
+  width:100%;background:transparent;border:none;border-bottom:1px dashed transparent;color:var(--paper-ink);
+  font-family:'Courier Prime',monospace;resize:none;overflow:hidden;padding:1px 2px;
+}
+.block-field:focus{outline:none;border-bottom-color:#c7bfa9;}
+input.block-field{font-size:inherit;}
+textarea.block-field{display:block;}
+.bt-escena .block-field{font-weight:700;text-transform:uppercase;font-size:14.5px;}
+.bt-personaje{text-align:center;padding-left:150px;}
+.bt-personaje .block-field{font-weight:700;text-transform:uppercase;text-align:center;}
+.bt-parentesis{text-align:center;padding-left:120px;}
+.bt-parentesis .block-field{font-style:italic;font-size:13px;text-align:center;color:#5c5347;}
+.bt-dialogo{padding-left:100px;padding-right:80px;}
+.bt-transicion .block-field{font-weight:700;text-transform:uppercase;}
+.bt-nota .block-field{font-style:italic;color:#6b6459;font-size:13px;}
+.bt-accion .block-field{}
+.readonly-block{padding:3px 0;white-space:pre-wrap;}
+.readonly-block.bt-escena{font-weight:700;text-transform:uppercase;margin-top:14px;}
+.readonly-block.bt-personaje{text-align:center;font-weight:700;text-transform:uppercase;margin-top:10px;padding-left:150px;}
+.readonly-block.bt-parentesis{text-align:center;font-style:italic;font-size:13px;color:#5c5347;padding-left:120px;}
+.readonly-block.bt-dialogo{padding-left:100px;padding-right:80px;}
+.readonly-block.bt-transicion{font-weight:700;text-transform:uppercase;margin:12px 0;}
+.readonly-block.bt-nota{font-style:italic;color:#6b6459;font-size:13px;}
+.fin-sketch{text-align:center;font-weight:700;text-transform:uppercase;margin-top:26px;color:#5c5347;}
+
+.add-block-bar{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;}
+.add-block-bar button{
+  background:var(--surface);border:1px solid var(--border);color:var(--text-dim);
+  padding:8px 13px;border-radius:10px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:5px;
+}
+.add-block-bar button:hover{border-color:var(--accent);color:var(--accent);}
+.guion-empty-note{text-align:center;color:var(--text-faint);font-size:12.5px;margin-top:10px;}
+
+/* modal */
+.modal-backdrop{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center;padding:20px;
+}
+.modal-backdrop.visible{display:flex;}
+.modal-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:26px;width:100%;max-width:420px;
+  box-shadow:var(--shadow);
+}
+.modal-card h3{margin:0 0 16px;font-size:18px;}
+.modal-card .field-group{margin-bottom:16px;}
+.modal-card .field-group input[type=text],.modal-card .field-group input[type=file],.modal-card .field-group textarea{
+  width:100%;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-size:13.5px;
+}
+.modal-card .field-group textarea{resize:vertical;font-family:'Courier Prime',monospace;line-height:1.5;}
+.modal-card.wide{max-width:560px;}
+.quick-actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.quick-actions button{
+  background:var(--accent);border:1px solid var(--accent);color:var(--accent-ink);
+  padding:9px 15px;border-radius:10px;font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:6px;
+}
+.quick-actions button:hover{background:var(--accent-dark);border-color:var(--accent-dark);}
+.beat-presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.plantilla-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:6px;}
+.plantilla-pick{
+  display:block;width:100%;text-align:left;background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;
+  padding:12px 14px;color:var(--text);
+}
+.plantilla-pick:hover{border-color:var(--accent);}
+.plantilla-pick .pt-label{font-weight:700;font-size:14px;margin-bottom:3px;}
+.plantilla-pick .pt-desc{font-size:12px;color:var(--text-dim);}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:6px;}
+.modal-photo-preview{
+  width:70px;height:70px;border-radius:50%;background-size:cover;background-position:center;margin:0 auto 14px;
+  border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;color:var(--accent-ink);
+}
+.modal-link{background:none;border:none;color:var(--text-faint);font-size:12.5px;text-decoration:underline;margin-top:4px;display:inline-block;}
+
+/* toast */
+#toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface-2);
+  border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:12px;font-size:13.5px;
+  box-shadow:var(--shadow);z-index:200;opacity:0;pointer-events:none;transition:.2s;max-width:90vw;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast.error{border-color:var(--coral);color:var(--coral);}
+
+@media print{
+  body *{visibility:hidden;}
+  .guion-page,.guion-page *{visibility:visible;}
+  .guion-page{position:absolute;top:0;left:0;width:100%;box-shadow:none;border:none;}
+  .block-gutter,.add-block-bar{display:none !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- PIN GATE -->
+<div id="pinScreen" class="gate-screen">
+  <div class="gate-card">
+    <div class="gate-logo"><i class="fa-solid fa-clapperboard"></i></div>
+    <h1 class="wordmark"><span class="wm-cine">CINE</span><span class="wm-pobre">POBRE</span></h1>
+    <p class="sub">Ideas, premisas y guiones del equipo.</p>
+    <form id="pinForm">
+      <div class="gate-field">
+        <label>¿Quién eres?</label>
+        <div class="select-wrap">
+          <select id="perfilSelect"></select>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+      </div>
+      <input id="pinInput" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="······">
+      <div class="gate-error" id="pinError"></div>
+      <button type="submit" class="btn btn-primary" id="pinBtn">Entrar</button>
+    </form>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appShell">
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <div class="brand"><i class="fa-solid fa-clapperboard"></i> <span class="wordmark"><span class="wm-cine">CINE</span><span class="wm-pobre">POBRE</span></span></div>
+      <button class="btn btn-primary" id="btnNuevaIdea"><i class="fa-solid fa-plus"></i> Nueva idea</button>
+    </div>
+    <div class="sidebar-search">
+      <input id="buscador" type="text" placeholder="Buscar idea...">
+    </div>
+    <nav class="sidebar-sections">
+      <details class="seccion" data-cat="guion" open>
+        <summary><span class="dot dot-guion"></span> Con guión <span class="count" id="countGuion">0</span><span class="arrow"><i class="fa-solid fa-chevron-right"></i></span></summary>
+        <ul class="idea-list" id="listaGuion"></ul>
+      </details>
+      <details class="seccion" data-cat="premisa" open>
+        <summary><span class="dot dot-premisa"></span> Con premisa <span class="count" id="countPremisa">0</span><span class="arrow"><i class="fa-solid fa-chevron-right"></i></span></summary>
+        <ul class="idea-list" id="listaPremisa"></ul>
+      </details>
+      <details class="seccion" data-cat="idea" open>
+        <summary><span class="dot dot-idea"></span> Solo ideas <span class="count" id="countIdea">0</span><span class="arrow"><i class="fa-solid fa-chevron-right"></i></span></summary>
+        <ul class="idea-list" id="listaIdea"></ul>
+      </details>
+    </nav>
+    <div class="sidebar-foot" id="sidebarFoot"></div>
+  </aside>
+
+  <div class="main">
+    <header class="mobile-topbar">
+      <button class="icon-btn" id="btnMenu"><i class="fa-solid fa-bars"></i></button>
+      <div class="mobile-title"><i class="fa-solid fa-clapperboard"></i> <span class="wordmark"><span class="wm-cine">CINE</span><span class="wm-pobre">POBRE</span></span></div>
+      <div style="width:36px"></div>
+    </header>
+    <div class="main-content" id="mainContent"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal-card" id="modalCard"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ============ API ============ */
+const API_URL = 'https://script.google.com/macros/s/AKfycbxyaCcYjeR2B2lARqIf93dsGJLfLWc4wpjyhxXhuaVMVjyeVGAwdgXW9t76NljtbjLe/exec';
+
+async function apiGet(action, params={}){
+  const url = new URL(API_URL);
+  url.searchParams.set('action', action);
+  Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
+  const res = await fetch(url.toString());
+  const json = await res.json();
+  if(!json.ok) throw new Error(json.error || 'Error de servidor');
+  return json.data;
+}
+async function apiPost(action, payload={}){
+  const res = await fetch(API_URL, {
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify({action, payload})
+  });
+  const json = await res.json();
+  if(!json.ok) throw new Error(json.error || 'Error de servidor');
+  return json.data;
+}
+
+/* ============ ESTADO ============ */
+const state = {
+  token: null, perfil: null, usuarios: [], ideas: [],
+  currentId: null, vistaSimple: false, tab: 'premisa',
+  saveTimer: null, dirty: false
+};
+
+const BLOCK_TYPES = {
+  escena:      { label:'Escena',      short:'ESC',  icon:'fa-solid fa-location-dot',   ph:'EXT. LUGAR - DÍA',        next:'accion',  tag:'input'    },
+  accion:      { label:'Acción',      short:'ACC',  icon:'fa-solid fa-person-running',  ph:'Describe la acción...',    next:null,      tag:'textarea' },
+  personaje:   { label:'Personaje',   short:'PJ',   icon:'fa-solid fa-user',            ph:'NOMBRE',                   next:'dialogo', tag:'input'    },
+  parentesis:  { label:'Acotación',   short:'(·)',  icon:'fa-solid fa-quote-left',      ph:'(cómo lo dice)',           next:'dialogo', tag:'input'    },
+  dialogo:     { label:'Diálogo',     short:'DIAL', icon:'fa-solid fa-comment',         ph:'Lo que dice el personaje...', next:null,   tag:'textarea' },
+  transicion:  { label:'Corte',       short:'CUT',  icon:'fa-solid fa-scissors',        ph:'CORTE A NEGRO / CORTE RÁPIDO A: ...', next:'accion', tag:'input' },
+  nota:        { label:'Nota',        short:'NOTA', icon:'fa-solid fa-thumbtack',       ph:'Nota de dirección...',     next:null,      tag:'textarea' }
+};
+
+/* ============ HELPERS ============ */
+function $(sel,ctx=document){return ctx.querySelector(sel);}
+function $all(sel,ctx=document){return Array.from(ctx.querySelectorAll(sel));}
+function el(tag, cls, text){
+  const e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(text!==undefined) e.textContent = text;
+  return e;
+}
+function iconBtn(iconClass, title, onClick){
+  const b = document.createElement('button');
+  b.innerHTML = `<i class="${iconClass}"></i>`;
+  b.title = title;
+  b.onclick = onClick;
+  return b;
+}
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function uid(){ return 'b_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function relTime(v){
+  if(!v) return '';
+  const d = new Date(v); const diff = (Date.now()-d.getTime())/1000;
+  if(diff<60) return 'justo ahora';
+  if(diff<3600) return 'hace '+Math.floor(diff/60)+' min';
+  if(diff<86400) return 'hace '+Math.floor(diff/3600)+' h';
+  if(diff<86400*7) return 'hace '+Math.floor(diff/86400)+' d';
+  return d.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+}
+function showToast(msg, type){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = type==='error' ? 'show error' : 'show';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>{ t.className=''; }, 2600);
+}
+function avatarStyle(usuario){
+  if(usuario && usuario.fotoUrl) return `background-image:url('${usuario.fotoUrl}')`;
+  return `background:${usuario ? usuario.colorTag : '#2fe0c0'}`;
+}
+function avatarInitial(usuario){ return usuario && usuario.nombre ? usuario.nombre.trim()[0].toUpperCase() : '?'; }
+function usuarioPorId(id){ return state.usuarios.find(u=>u.id===id); }
+
+/* ============ MODAL ============ */
+function openModal(html, wide){
+  $('#modalCard').innerHTML = html;
+  $('#modalCard').className = 'modal-card' + (wide ? ' wide' : '');
+  $('#modalBackdrop').classList.add('visible');
+}
+function closeModal(){ $('#modalBackdrop').classList.remove('visible'); $('#modalCard').innerHTML=''; }
+$('#modalBackdrop').addEventListener('click', e=>{ if(e.target.id==='modalBackdrop') closeModal(); });
+
+function confirmDialog(msg, onYes){
+  openModal(`
+    <h3>¿Estás seguro?</h3>
+    <p style="color:var(--text-dim);font-size:14px;margin-bottom:20px;">${esc(msg)}</p>
+    <div class="modal-actions">
+      <button class="btn" id="cfNo">Cancelar</button>
+      <button class="btn btn-primary" id="cfYes" style="background:var(--coral);border-color:var(--coral);">Sí, continuar</button>
+    </div>`);
+  $('#cfNo').onclick = closeModal;
+  $('#cfYes').onclick = ()=>{ closeModal(); onYes(); };
+}
+
+/* ============ LOGIN / PERFIL ============ */
+document.addEventListener('DOMContentLoaded', boot);
+
+async function boot(){
+  state.token = localStorage.getItem('sk_token');
+  if(state.token){ await afterLogin(); return; }
+  await mostrarPantallaLogin();
+}
+
+async function mostrarPantallaLogin(){
+  try{
+    state.usuarios = await apiGet('usuarios');
+    fillPerfilSelect();
+  }catch(err){
+    showToast(err.message, 'error');
+  }
+  $('#pinInput').focus();
+}
+
+function fillPerfilSelect(){
+  const sel = $('#perfilSelect');
+  sel.innerHTML = state.usuarios.map(u=>`<option value="${esc(u.id)}">${esc(u.nombre)}</option>`).join('');
+}
+
+$('#pinForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const perfilId = $('#perfilSelect').value;
+  const pin = $('#pinInput').value.trim();
+  if(pin.length!==6){ $('#pinError').textContent='Ingresa los 6 dígitos.'; return; }
+  const btn = $('#pinBtn');
+  btn.disabled = true; btn.textContent = 'Verificando...';
+  try{
+    const res = await apiPost('login', { perfilId, pin });
+    localStorage.setItem('sk_token', res.token);
+    localStorage.setItem('sk_perfil_id', perfilId);
+    state.token = res.token;
+    state.perfil = usuarioPorId(perfilId);
+    $('#pinError').textContent='';
+    $('#pinScreen').classList.add('hidden');
+    await loadApp();
+  }catch(err){
+    $('#pinError').textContent = err.message;
+  }finally{
+    btn.disabled = false; btn.textContent = 'Entrar';
+  }
+});
+
+async function afterLogin(){
+  try{
+    state.usuarios = await apiGet('usuarios');
+  }catch(err){
+    showToast(err.message, 'error');
+    return;
+  }
+  const perfilId = localStorage.getItem('sk_perfil_id');
+  const perfil = usuarioPorId(perfilId);
+  if(!perfil){
+    localStorage.removeItem('sk_token');
+    localStorage.removeItem('sk_perfil_id');
+    state.token = null;
+    fillPerfilSelect();
+    $('#pinInput').focus();
+    return;
+  }
+  state.perfil = perfil;
+  $('#pinScreen').classList.add('hidden');
+  await loadApp();
+}
+
+async function loadApp(){
+  $('#appShell').classList.add('visible');
+  try{
+    state.ideas = await apiGet('ideas');
+  }catch(err){
+    if(/sesi[oó]n/i.test(err.message)){
+      localStorage.removeItem('sk_token');
+      $('#appShell').classList.remove('visible');
+      $('#pinScreen').classList.remove('hidden');
+      return;
+    }
+    showToast(err.message,'error');
+    state.ideas = [];
+  }
+  renderSidebarFoot();
+  renderSidebarLists();
+
+  const params = new URLSearchParams(location.search);
+  const urlIdea = params.get('idea');
+  if(urlIdea && state.ideas.some(i=>i.id===urlIdea)){
+    state.vistaSimple = params.get('modo')==='lectura';
+    selectIdea(urlIdea);
+    return;
+  }
+  const lastId = localStorage.getItem('sk_last_idea');
+  if(lastId && state.ideas.some(i=>i.id===lastId)){
+    selectIdea(lastId);
+  } else {
+    renderEmptyState();
+  }
+}
+
+/* ============ SIDEBAR ============ */
+function renderSidebarFoot(){
+  const foot = $('#sidebarFoot');
+  foot.innerHTML='';
+  const btn = el('button','profile-chip');
+  btn.innerHTML = `<span class="avatar" style="${avatarStyle(state.perfil)}">${state.perfil.fotoUrl?'':esc(avatarInitial(state.perfil))}</span>
+    <span><span class="nombre" style="display:block"></span><span class="sub">Editar perfil</span></span>`;
+  btn.querySelector('.nombre').textContent = state.perfil.nombre;
+  btn.onclick = openProfileModal;
+  foot.appendChild(btn);
+}
+
+function renderSidebarLists(filter=''){
+  const groups = { guion:[], premisa:[], idea:[] };
+  state.ideas.forEach(i=>{
+    if(filter && !i.titulo.toLowerCase().includes(filter.toLowerCase())) return;
+    groups[i.categoria].push(i);
+  });
+  fillList('listaGuion', groups.guion, 'countGuion');
+  fillList('listaPremisa', groups.premisa, 'countPremisa');
+  fillList('listaIdea', groups.idea, 'countIdea');
+}
+
+function fillList(ulId, items, countId){
+  const ul = $('#'+ulId);
+  ul.innerHTML='';
+  $('#'+countId).textContent = items.length;
+  if(!items.length){
+    const hint = el('div','empty-list-hint','Nada por aquí todavía');
+    ul.appendChild(hint);
+    return;
+  }
+  items.forEach(idea=>{
+    const li = el('li');
+    const btn = el('button','idea-link'+(idea.id===state.currentId?' active':''));
+    const autor = usuarioPorId(idea.autorId);
+    btn.innerHTML = `<span class="titulo"></span><span class="meta"><span class="mini-avatar" style="${autor?avatarStyle(autor):''}"></span><span class="fecha"></span></span>`;
+    btn.querySelector('.titulo').textContent = idea.titulo;
+    btn.querySelector('.fecha').textContent = relTime(idea.fechaActualizacion);
+    btn.onclick = ()=>{ selectIdea(idea.id); closeMobileSidebar(); };
+    li.appendChild(btn);
+    ul.appendChild(li);
+  });
+}
+
+$('#buscador').addEventListener('input', e=> renderSidebarLists(e.target.value));
+
+$('#btnNuevaIdea').addEventListener('click', ()=>{
+  openModal(`
+    <h3>Nueva idea</h3>
+    <div class="field-group">
+      <label>Título</label>
+      <input type="text" id="nuevaIdeaTitulo" placeholder="Ej: Mundo al revés" autofocus>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="niCancel">Cancelar</button>
+      <button class="btn btn-primary" id="niCrear">Crear</button>
+    </div>`);
+  $('#niCancel').onclick = closeModal;
+  $('#niCrear').onclick = crearIdeaDesdeModal;
+  $('#nuevaIdeaTitulo').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); crearIdeaDesdeModal(); }});
+});
+
+async function crearIdeaDesdeModal(){
+  const titulo = $('#nuevaIdeaTitulo').value.trim();
+  if(!titulo){ showToast('Ponle un título', 'error'); return; }
+  try{
+    const idea = await apiPost('crear_idea', { titulo, autorId: state.perfil.id, token: state.token });
+    state.ideas.unshift(idea);
+    closeModal();
+    renderSidebarLists();
+    selectIdea(idea.id);
+    showToast('Idea creada');
+  }catch(err){ showToast(err.message,'error'); }
+}
+
+/* mobile sidebar */
+$('#btnMenu').addEventListener('click', ()=>{
+  $('#sidebar').classList.add('open');
+  $('#sidebarBackdrop').classList.add('visible');
+});
+$('#sidebarBackdrop').addEventListener('click', closeMobileSidebar);
+function closeMobileSidebar(){
+  $('#sidebar').classList.remove('open');
+  $('#sidebarBackdrop').classList.remove('visible');
+}
+
+/* ============ PERFIL MODAL ============ */
+function openProfileModal(){
+  const u = state.perfil;
+  openModal(`
+    <h3>Tu perfil</h3>
+    <div class="modal-photo-preview" id="fotoPreview" style="${avatarStyle(u)}">${u.fotoUrl?'':esc(avatarInitial(u))}</div>
+    <div class="field-group">
+      <label>Nombre</label>
+      <input type="text" id="perfilNombre" value="${esc(u.nombre)}">
+    </div>
+    <div class="field-group">
+      <label>Foto de perfil</label>
+      <input type="file" id="perfilFoto" accept="image/*">
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="pfCancel">Cancelar</button>
+      <button class="btn btn-primary" id="pfGuardar">Guardar</button>
+    </div>
+    <div style="text-align:center;margin-top:14px;">
+      <button class="modal-link" id="pfCambiar">Cerrar sesión</button>
+    </div>`);
+  $('#pfCancel').onclick = closeModal;
+  $('#pfCambiar').onclick = ()=>{ localStorage.removeItem('sk_token'); localStorage.removeItem('sk_perfil_id'); location.reload(); };
+  $('#perfilFoto').addEventListener('change', async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const dataUrl = await resizeImage(file, 300);
+    $('#fotoPreview').style.backgroundImage = `url('${dataUrl}')`;
+    $('#fotoPreview').textContent='';
+    $('#fotoPreview').dataset.pending = dataUrl;
+  });
+  $('#pfGuardar').onclick = guardarPerfil;
+}
+
+function resizeImage(file, size){
+  return new Promise((resolve)=>{
+    const reader = new FileReader();
+    reader.onload = (e)=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const canvas = document.createElement('canvas');
+        canvas.width = size; canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        const s = Math.min(img.width, img.height);
+        const sx = (img.width-s)/2, sy=(img.height-s)/2;
+        ctx.drawImage(img, sx, sy, s, s, 0, 0, size, size);
+        resolve(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function guardarPerfil(){
+  const nombre = $('#perfilNombre').value.trim();
+  const fotoBase64 = $('#fotoPreview').dataset.pending || null;
+  try{
+    const payload = { id: state.perfil.id, nombre, token: state.token };
+    if(fotoBase64) payload.fotoBase64 = fotoBase64;
+    const actualizado = await apiPost('actualizar_usuario', payload);
+    state.perfil = { ...state.perfil, nombre: actualizado.nombre, fotoUrl: actualizado.fotoUrl || state.perfil.fotoUrl };
+    const idx = state.usuarios.findIndex(u=>u.id===state.perfil.id);
+    if(idx>=0) state.usuarios[idx] = state.perfil;
+    renderSidebarFoot();
+    renderSidebarLists();
+    closeModal();
+    showToast('Perfil actualizado');
+  }catch(err){ showToast(err.message,'error'); }
+}
+
+/* ============ SELECCIÓN DE IDEA ============ */
+function selectIdea(id){
+  state.currentId = id;
+  state.tab = 'premisa';
+  localStorage.setItem('sk_last_idea', id);
+  renderSidebarLists($('#buscador').value);
+  renderMain();
+}
+function currentIdea(){ return state.ideas.find(i=>i.id===state.currentId); }
+
+/* ============ EMPTY STATE ============ */
+function renderEmptyState(){
+  const total = state.ideas.length;
+  const con = t => state.ideas.filter(i=>i.categoria===t).length;
+  $('#mainContent').innerHTML = `
+    <div class="welcome">
+      <div class="big-logo"><i class="fa-solid fa-clapperboard"></i></div>
+      <h2>Bienvenido a <span class="wordmark"><span class="wm-cine">CINE</span><span class="wm-pobre">POBRE</span></span></h2>
+      <p>Elige una idea del menú o crea una nueva para empezar a escribir.</p>
+      <button class="btn btn-primary" id="welcomeNueva"><i class="fa-solid fa-plus"></i> Nueva idea</button>
+      <div class="stats-row">
+        <div class="stat-card"><div class="n">${total}</div><div class="l">Ideas totales</div></div>
+        <div class="stat-card"><div class="n">${con('guion')}</div><div class="l">Con guión</div></div>
+        <div class="stat-card"><div class="n">${con('premisa')}</div><div class="l">Con premisa</div></div>
+        <div class="stat-card"><div class="n">${con('idea')}</div><div class="l">Solo ideas</div></div>
+      </div>
+    </div>`;
+  $('#welcomeNueva').onclick = ()=> $('#btnNuevaIdea').click();
+}
+
+/* ============ VISTA DE IDEA ============ */
+const CAT_LABEL = { guion:'Con guión', premisa:'Con premisa', idea:'Solo idea' };
+
+function renderMain(){
+  const idea = currentIdea();
+  if(!idea){ renderEmptyState(); return; }
+  const autor = usuarioPorId(idea.autorId);
+  const main = $('#mainContent');
+  main.innerHTML = `
+    <div class="idea-header">
+      <div style="flex:1;min-width:220px;">
+        ${state.vistaSimple
+          ? `<h2 class="idea-title-plain"></h2>`
+          : `<input class="idea-title-input" id="tituloInput" value="${esc(idea.titulo)}">`}
+        <div class="idea-meta-row">
+          <span class="badge badge-${idea.categoria}">${CAT_LABEL[idea.categoria]}</span>
+          <span class="author"><span class="mini-avatar" style="${autor?avatarStyle(autor):''}"></span><span class="autorNombre"></span></span>
+          <span class="save-state" id="saveState"></span>
+        </div>
+      </div>
+      <div class="idea-toolbar">
+        <button class="btn btn-sm" id="btnVistaSimple">${state.vistaSimple ? '<i class="fa-solid fa-pen"></i> Editar' : '<i class="fa-solid fa-eye"></i> Vista simple'}</button>
+        <button class="btn btn-sm" id="btnCopiarLink"><i class="fa-solid fa-link"></i> Link</button>
+        <button class="btn btn-sm" id="btnExportar" ${idea.bloques.length?'':'disabled'}><i class="fa-solid fa-file-pdf"></i> Exportar PDF</button>
+        ${state.vistaSimple ? '' : '<button class="btn btn-sm btn-danger" id="btnEliminar"><i class="fa-solid fa-trash"></i></button>'}
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn ${state.tab==='premisa'?'active':''}" data-tab="premisa">Premisa</button>
+      <button class="tab-btn ${state.tab==='guion'?'active':''}" data-tab="guion">Guion</button>
+    </div>
+    <div class="tab-panel ${state.tab==='premisa'?'active':''}" id="panelPremisa"></div>
+    <div class="tab-panel ${state.tab==='guion'?'active':''}" id="panelGuion"></div>
+  `;
+  if(state.vistaSimple) $('.idea-title-plain').textContent = idea.titulo;
+  $('.autorNombre').textContent = autor ? autor.nombre : '—';
+
+  $all('.tab-btn').forEach(b=> b.onclick = ()=>{ state.tab = b.dataset.tab; renderMain(); });
+  if(!state.vistaSimple){
+    $('#tituloInput').addEventListener('input', e=>{ scheduleGuardarIdea({ titulo: e.target.value }); });
+    $('#btnEliminar').onclick = ()=> confirmDialog('Se eliminará "'+idea.titulo+'" para siempre.', eliminarIdeaActual);
+  }
+  $('#btnVistaSimple').onclick = ()=>{ state.vistaSimple = !state.vistaSimple; renderMain(); };
+  $('#btnCopiarLink').onclick = copiarLinkLectura;
+  $('#btnExportar').onclick = exportarPdfActual;
+
+  renderPremisaTab(idea);
+  renderGuionTab(idea);
+}
+
+async function copiarLinkLectura(){
+  const url = `${location.origin}${location.pathname}?idea=${currentIdea().id}&modo=lectura`;
+  try{
+    await navigator.clipboard.writeText(url);
+    showToast('Link copiado');
+  }catch(e){
+    prompt('Copia este link:', url);
+  }
+}
+
+async function eliminarIdeaActual(){
+  const id = state.currentId;
+  try{
+    await apiPost('eliminar_idea', { id, token: state.token });
+    state.ideas = state.ideas.filter(i=>i.id!==id);
+    state.currentId = null;
+    localStorage.removeItem('sk_last_idea');
+    renderSidebarLists();
+    renderEmptyState();
+    showToast('Idea eliminada');
+  }catch(err){ showToast(err.message,'error'); }
+}
+
+/* ---- guardado con debounce ---- */
+function scheduleGuardarIdea(campos){
+  const idea = currentIdea();
+  Object.assign(idea, campos);
+  setSaveState('Escribiendo...');
+  clearTimeout(state.saveTimer);
+  state.saveTimer = setTimeout(async ()=>{
+    setSaveState('Guardando...');
+    try{
+      await apiPost('actualizar_idea', { id: idea.id, campos, token: state.token });
+      idea.fechaActualizacion = new Date().toISOString();
+      recategorizar(idea);
+      setSaveState('Guardado');
+      renderSidebarLists($('#buscador').value);
+    }catch(err){
+      setSaveState('Error al guardar');
+      showToast(err.message,'error');
+    }
+  }, 900);
+}
+function setSaveState(txt){
+  const el2 = $('#saveState');
+  if(!el2) return;
+  el2.innerHTML = (txt==='Guardado') ? '<i class="fa-solid fa-check"></i> Guardado' : esc(txt);
+}
+function recategorizar(idea){
+  const tieneGuion = idea.bloques && idea.bloques.length>0;
+  const tienePremisa = !!(idea.premisaTexto && idea.premisaTexto.trim());
+  idea.categoria = tieneGuion ? 'guion' : (tienePremisa ? 'premisa' : 'idea');
+}
+
+/* ============ TAB PREMISA ============ */
+function renderPremisaTab(idea){
+  const panel = $('#panelPremisa');
+  const editable = !state.vistaSimple;
+  const showResumen = idea.bloques.length>0;
+
+  panel.innerHTML = `
+    ${(!idea.premisaTexto && !idea.premisaLogline && idea.bloques.length===0 && editable) ? `
+      <div class="empty-block">
+        <p>Esta idea todavía no tiene premisa ni guión.</p>
+        <div class="actions">
+          <button class="btn btn-primary" id="btnIrPremisa"><i class="fa-regular fa-file-lines"></i> Agregar premisa o descripción</button>
+          <button class="btn" id="btnIrGuion"><i class="fa-solid fa-clapperboard"></i> Crear guión</button>
+        </div>
+      </div>` : `
+      <div class="field-group">
+        <label>Logline (una línea)</label>
+        ${editable
+          ? `<input type="text" id="loglineInput" value="${esc(idea.premisaLogline)}" placeholder="En una frase: ¿de qué trata?">`
+          : `<div class="field-readonly ${idea.premisaLogline?'':'empty'}">${esc(idea.premisaLogline)||'Sin logline'}</div>`}
+      </div>
+      <div class="field-group">
+        <label>Premisa / sinopsis</label>
+        ${editable
+          ? `<textarea id="premisaInput" rows="6" placeholder="Desarrolla la idea: personajes, situación, remate...">${esc(idea.premisaTexto)}</textarea>`
+          : `<div class="field-readonly ${idea.premisaTexto?'':'empty'}">${esc(idea.premisaTexto)||'Sin premisa'}</div>`}
+      </div>
+      <div class="field-group">
+        <label>Notas / referencias</label>
+        ${editable
+          ? `<textarea id="notasInput" rows="3" placeholder="Referencias, tono, ideas sueltas...">${esc(idea.premisaNotas)}</textarea>`
+          : `<div class="field-readonly ${idea.premisaNotas?'':'empty'}">${esc(idea.premisaNotas)||'Sin notas'}</div>`}
+      </div>
+      ${showResumen ? `
+        <div class="field-group">
+          <label>Resumen del guion (IA)<span class="soon-badge">Próximamente</span></label>
+          <div class="resumen-box">
+            <span class="txt">${idea.resumenIA ? esc(idea.resumenIA) : '<b>Aún no generado.</b> Cuando esté conectado, Claude podrá leer tu guion y escribirte un resumen aquí.'}</span>
+            <button class="btn btn-sm" disabled><i class="fa-solid fa-robot"></i> Generar</button>
+          </div>
+        </div>` : ''}
+      ${editable && idea.bloques.length===0 ? `
+        <div class="guion-empty-note">Esta idea no tiene guión todavía — <a href="#" id="linkCrearGuion">crear guión</a></div>
+      ` : ''}
+    `}
+  `;
+
+  if(editable){
+    if($('#btnIrPremisa')) $('#btnIrPremisa').onclick = ()=>{ idea.premisaTexto=' '; renderMain(); };
+    if($('#btnIrGuion')) $('#btnIrGuion').onclick = ()=>{ state.tab='guion'; renderMain(); };
+    if($('#linkCrearGuion')) $('#linkCrearGuion').onclick = (e)=>{ e.preventDefault(); state.tab='guion'; renderMain(); };
+    if($('#loglineInput')) $('#loglineInput').addEventListener('input', e=> scheduleGuardarIdea({ premisaLogline: e.target.value }));
+    if($('#premisaInput')) $('#premisaInput').addEventListener('input', e=> scheduleGuardarIdea({ premisaTexto: e.target.value }));
+    if($('#notasInput')) $('#notasInput').addEventListener('input', e=> scheduleGuardarIdea({ premisaNotas: e.target.value }));
+  }
+}
+
+/* ============ TAB GUION ============ */
+function renderGuionTab(idea){
+  const panel = $('#panelGuion');
+  const editable = !state.vistaSimple;
+
+  if(idea.bloques.length===0 && editable){
+    panel.innerHTML = `
+      <div class="empty-block">
+        <p>Esta idea no tiene guión todavía.</p>
+        <div class="actions">
+          <button class="btn btn-primary" id="btnCrearGuionVacio"><i class="fa-solid fa-clapperboard"></i> Crear guión</button>
+          <button class="btn" id="btnImportarTexto"><i class="fa-solid fa-file-import"></i> Importar texto</button>
+        </div>
+      </div>`;
+    $('#btnCrearGuionVacio').onclick = ()=> abrirModalPlantillas(idea);
+    $('#btnImportarTexto').onclick = ()=> abrirModalImportar(idea);
+    return;
+  }
+  if(idea.bloques.length===0 && !editable){
+    panel.innerHTML = `<div class="empty-block"><p>Esta idea no tiene guión todavía.</p></div>`;
+    return;
+  }
+
+  let html = '';
+  if(editable){
+    html += `
+      <details class="guion-detalles">
+        <summary><i class="fa-solid fa-gear"></i> Detalles del guion (versión, elenco, formato)</summary>
+        <div class="detalles-grid">
+          <div><label>Versión</label><input type="text" id="ddVersion" value="${esc(idea.guionVersion)}"></div>
+          <div><label>Formato</label>
+            <select id="ddFormato">
+              ${['Vertical 9:16','Horizontal 16:9','Cuadrado 1:1'].map(f=>`<option ${idea.guionFormato===f?'selected':''}>${f}</option>`).join('')}
+            </select>
+          </div>
+          <div class="full"><label>Elenco (separado por comas)</label><input type="text" id="ddElenco" value="${esc(idea.guionElenco)}" placeholder="Tú, Black, Charlie"></div>
+          <div class="full"><label>Nota de dirección general</label><input type="text" id="ddNota" value="${esc(idea.guionNotaDireccion)}" placeholder="Tono, formato de cámara, etc."></div>
+        </div>
+      </details>`;
+  }
+
+  html += `<div class="guion-page" id="guionPage">
+      <div class="page-title"></div>
+      <div class="page-meta"></div>
+      ${idea.guionNotaDireccion ? `<div class="page-nota"></div>` : ''}
+      <div id="blocksContainer"></div>
+      <div class="fin-sketch">Fin del sketch</div>
+    </div>`;
+
+  if(editable){
+    html += `
+      <div class="quick-actions">
+        <button id="btnDialogoRapido"><i class="fa-solid fa-bolt"></i> Nueva línea (corte + diálogo)</button>
+        <button id="btnNuevoBeat"><i class="fa-solid fa-bookmark"></i> Nuevo beat / escena</button>
+      </div>`;
+    html += `<div class="add-block-bar">`;
+    Object.entries(BLOCK_TYPES).forEach(([key,def])=>{
+      html += `<button data-add="${key}"><i class="${def.icon}"></i> ${def.label}</button>`;
+    });
+    html += `</div>`;
+  }
+
+  panel.innerHTML = html;
+  $('.page-title').textContent = idea.titulo;
+  $('.page-meta').textContent = `Versión ${idea.guionVersion || '1.0'}${idea.guionElenco ? ' · '+idea.guionElenco : ''}${idea.guionFormato ? ' · '+idea.guionFormato : ''}`;
+  if(idea.guionNotaDireccion) $('.page-nota').textContent = 'Nota de dirección: ' + idea.guionNotaDireccion;
+
+  if(editable){
+    $('#ddVersion').addEventListener('input', e=>{ idea.guionVersion=e.target.value; $('.page-meta').textContent = `Versión ${idea.guionVersion||'1.0'}${idea.guionElenco?' · '+idea.guionElenco:''}${idea.guionFormato?' · '+idea.guionFormato:''}`; scheduleGuardarGuion(); });
+    $('#ddFormato').addEventListener('change', e=>{ idea.guionFormato=e.target.value; renderGuionTab(idea); scheduleGuardarGuion(); });
+    $('#ddElenco').addEventListener('input', e=>{ idea.guionElenco=e.target.value; $('.page-meta').textContent = `Versión ${idea.guionVersion||'1.0'}${idea.guionElenco?' · '+idea.guionElenco:''}${idea.guionFormato?' · '+idea.guionFormato:''}`; scheduleGuardarGuion(); });
+    $('#ddNota').addEventListener('input', e=>{ idea.guionNotaDireccion=e.target.value; renderGuionTab(idea); scheduleGuardarGuion(); });
+    $all('[data-add]').forEach(btn=> btn.onclick = ()=> agregarBloque(idea, btn.dataset.add));
+    $('#btnDialogoRapido').onclick = ()=> abrirModalDialogoRapido(idea);
+    $('#btnNuevoBeat').onclick = ()=> abrirModalNuevoBeat(idea);
+  }
+
+  renderBloques(idea, editable);
+}
+
+function elencoDatalist(idea){
+  const nombres = new Set();
+  (idea.guionElenco||'').split(',').map(s=>s.trim()).filter(Boolean).forEach(n=>nombres.add(n));
+  idea.bloques.filter(b=>b.tipo==='personaje' && b.texto).forEach(b=>nombres.add(b.texto.trim()));
+  return Array.from(nombres);
+}
+
+function renderBloques(idea, editable){
+  const cont = $('#blocksContainer');
+  cont.innerHTML='';
+  const datalistId = 'personajesList';
+  if(editable){
+    const dl = document.createElement('datalist');
+    dl.id = datalistId;
+    elencoDatalist(idea).forEach(n=>{ const o=document.createElement('option'); o.value=n; dl.appendChild(o); });
+    cont.appendChild(dl);
+  }
+
+  idea.bloques.forEach((b, idx)=>{
+    const def = BLOCK_TYPES[b.tipo] || BLOCK_TYPES.accion;
+    if(!editable){
+      if(!b.texto || !b.texto.trim()) return;
+      const row = el('div', 'readonly-block bt-'+b.tipo);
+      row.textContent = b.texto;
+      cont.appendChild(row);
+      return;
+    }
+    const row = el('div', 'block-row bt-'+b.tipo);
+    row.dataset.blockId = b.id;
+
+    const gutter = el('div','block-gutter');
+    const select = document.createElement('select');
+    select.className='type-select';
+    Object.entries(BLOCK_TYPES).forEach(([key,d])=>{
+      const opt = document.createElement('option');
+      opt.value = key; opt.textContent = d.short;
+      if(key===b.tipo) opt.selected = true;
+      select.appendChild(opt);
+    });
+    select.addEventListener('change', ()=>{ b.tipo = select.value; renderGuionTab(idea); scheduleGuardarGuion(); });
+    const btns = el('div','gutter-btns');
+    const upBtn = iconBtn('fa-solid fa-chevron-up', 'Subir', ()=> moverBloque(idea, idx, -1));
+    const downBtn = iconBtn('fa-solid fa-chevron-down', 'Bajar', ()=> moverBloque(idea, idx, 1));
+    const addBtn = iconBtn('fa-solid fa-plus', 'Insertar después', ()=> insertarDespues(idea, idx, def.next || 'accion'));
+    const delBtn = iconBtn('fa-solid fa-xmark', 'Eliminar', ()=> eliminarBloque(idea, idx));
+    btns.append(upBtn, downBtn, addBtn, delBtn);
+    gutter.append(select, btns);
+    row.appendChild(gutter);
+
+    let field;
+    if(def.tag==='textarea'){
+      field = document.createElement('textarea');
+      field.rows = 1;
+      field.addEventListener('input', ()=>{ field.style.height='auto'; field.style.height=field.scrollHeight+'px'; });
+    } else {
+      field = document.createElement('input');
+      field.type='text';
+      if(b.tipo==='personaje') field.setAttribute('list', datalistId);
+    }
+    field.className='block-field';
+    field.placeholder = def.ph;
+    field.value = b.texto || '';
+    field.addEventListener('input', ()=>{ b.texto = field.value; scheduleGuardarGuion(); if(field.tagName==='TEXTAREA'){ field.style.height='auto'; field.style.height=field.scrollHeight+'px'; } });
+    field.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter' && field.tagName!=='TEXTAREA'){
+        e.preventDefault();
+        insertarDespues(idea, idx, def.next || 'accion');
+      } else if(e.key==='Enter' && (e.metaKey||e.ctrlKey)){
+        e.preventDefault();
+        insertarDespues(idea, idx, 'accion');
+      }
+    });
+    row.appendChild(field);
+    cont.appendChild(row);
+
+    requestAnimationFrame(()=>{ if(field.tagName==='TEXTAREA'){ field.style.height='auto'; field.style.height=field.scrollHeight+'px'; } });
+  });
+}
+
+function agregarBloque(idea, tipo){
+  idea.bloques.push({ id: uid(), tipo, texto:'' });
+  renderGuionTab(idea);
+  scheduleGuardarGuion();
+  focusBloque(idea.bloques[idea.bloques.length-1].id);
+}
+function insertarDespues(idea, idx, tipo){
+  const nuevo = { id: uid(), tipo, texto:'' };
+  idea.bloques.splice(idx+1, 0, nuevo);
+  renderGuionTab(idea);
+  scheduleGuardarGuion();
+  focusBloque(nuevo.id);
+}
+function moverBloque(idea, idx, dir){
+  const j = idx+dir;
+  if(j<0 || j>=idea.bloques.length) return;
+  const tmp = idea.bloques[idx]; idea.bloques[idx]=idea.bloques[j]; idea.bloques[j]=tmp;
+  renderGuionTab(idea);
+  scheduleGuardarGuion();
+}
+function eliminarBloque(idea, idx){
+  idea.bloques.splice(idx,1);
+  renderGuionTab(idea);
+  scheduleGuardarGuion();
+}
+function focusBloque(id, opts){
+  opts = opts || {};
+  setTimeout(()=>{
+    const row = $(`[data-block-id="${id}"]`);
+    if(!row) return;
+    const f = row.querySelector('.block-field');
+    if(!f) return;
+    f.focus();
+    if(opts.alFinal){
+      const len = f.value.length;
+      f.setSelectionRange(len, len);
+    } else if(opts.seleccionarTexto){
+      const start = f.value.indexOf(opts.seleccionarTexto);
+      if(start >= 0) f.setSelectionRange(start, start + opts.seleccionarTexto.length);
+      else f.select();
+    } else {
+      f.select();
+    }
+  }, 30);
+}
+
+/* ============ PLANTILLAS DE GUION ============ */
+const PLANTILLAS_GUION = {
+  blanco: {
+    label: 'Página en blanco',
+    desc: 'Un solo bloque de escena para arrancar desde cero.',
+    bloques: () => [{ id: uid(), tipo:'escena', texto:'' }]
+  },
+  cold_open: {
+    label: 'Cold Open (mockumentary)',
+    desc: 'Al estilo de los talking-heads: plantea el gancho y corta antes del remate — se resuelve al final.',
+    bloques: () => [
+      { id: uid(), tipo:'escena', texto:'[COLD OPEN]' },
+      { id: uid(), tipo:'nota', texto:'El cold open no resuelve nada todavía: plantea el gancho y corta. La resolución llega al final del sketch.' },
+      { id: uid(), tipo:'transicion', texto:'CORTE A: NOMBRE.' },
+      { id: uid(), tipo:'dialogo', texto:'NOMBRE: ' },
+      { id: uid(), tipo:'transicion', texto:'CORTE A: NOMBRE 2.' },
+      { id: uid(), tipo:'dialogo', texto:'NOMBRE 2: ' }
+    ]
+  },
+  comedia: {
+    label: 'Escena de comedia (multi-cámara)',
+    desc: 'Planteamiento, chiste y "topper" — un segundo chiste que sube la apuesta del primero.',
+    bloques: () => [
+      { id: uid(), tipo:'escena', texto:'INT. LUGAR - DÍA' },
+      { id: uid(), tipo:'nota', texto:'Estructura clásica de sitcom: planteamiento → chiste → topper (remate que sube la apuesta).' },
+      { id: uid(), tipo:'personaje', texto:'NOMBRE' },
+      { id: uid(), tipo:'dialogo', texto:'' },
+      { id: uid(), tipo:'personaje', texto:'NOMBRE 2' },
+      { id: uid(), tipo:'parentesis', texto:'(el topper)' },
+      { id: uid(), tipo:'dialogo', texto:'' }
+    ]
+  },
+  drama: {
+    label: 'Escena de drama (corta)',
+    desc: 'Dos personajes, tensión contenida — el silencio y la acción dicen tanto como el diálogo.',
+    bloques: () => [
+      { id: uid(), tipo:'escena', texto:'INT. LUGAR - NOCHE' },
+      { id: uid(), tipo:'nota', texto:'En drama, menos es más: deja que la acción y las pausas carguen la emoción, no lo digas todo hablado.' },
+      { id: uid(), tipo:'accion', texto:'Describe el ambiente y el estado de ánimo antes de que alguien hable.' },
+      { id: uid(), tipo:'personaje', texto:'NOMBRE' },
+      { id: uid(), tipo:'dialogo', texto:'' },
+      { id: uid(), tipo:'accion', texto:'Una pausa. NOMBRE 2 tarda en responder.' },
+      { id: uid(), tipo:'personaje', texto:'NOMBRE 2' },
+      { id: uid(), tipo:'dialogo', texto:'' }
+    ]
+  }
+};
+
+function abrirModalPlantillas(idea){
+  const opciones = Object.entries(PLANTILLAS_GUION).map(([key,p])=>`
+    <button class="plantilla-pick" data-key="${key}">
+      <div class="pt-label">${esc(p.label)}</div>
+      <div class="pt-desc">${esc(p.desc)}</div>
+    </button>`).join('');
+  openModal(`
+    <h3>¿Cómo quieres empezar?</h3>
+    <div class="plantilla-grid">${opciones}</div>
+    <div class="modal-actions"><button class="btn" id="ptCancel">Cancelar</button></div>
+  `, true);
+  $('#ptCancel').onclick = closeModal;
+  $all('.plantilla-pick').forEach(btn=>{
+    btn.onclick = ()=>{
+      const plantilla = PLANTILLAS_GUION[btn.dataset.key];
+      idea.bloques = plantilla.bloques();
+      closeModal();
+      renderGuionTab(idea);
+      guardarGuionActual();
+      focusBloque(idea.bloques[0].id, { seleccionarTexto: idea.bloques[0].texto });
+    };
+  });
+}
+
+/* ============ ACCIONES RÁPIDAS ============ */
+function abrirModalDialogoRapido(idea){
+  const nombres = elencoDatalist(idea);
+  openModal(`
+    <h3>Nueva línea de diálogo</h3>
+    <p style="color:var(--text-dim);font-size:13px;margin:0 0 14px;">Te armo "CORTE A: NOMBRE." y el diálogo listo para que solo escribas el texto.</p>
+    <div class="field-group">
+      <label>¿Quién habla?</label>
+      <input type="text" id="qdNombre" list="qdNombresList" placeholder="Ej: Charlie" autofocus>
+      <datalist id="qdNombresList">${nombres.map(n=>`<option value="${esc(n)}">`).join('')}</datalist>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="qdCancel">Cancelar</button>
+      <button class="btn btn-primary" id="qdOk">Agregar</button>
+    </div>`);
+  const submit = ()=>{
+    const nombre = $('#qdNombre').value.trim();
+    if(!nombre) return;
+    closeModal();
+    insertarLineaDialogo(idea, nombre);
+  };
+  $('#qdCancel').onclick = closeModal;
+  $('#qdOk').onclick = submit;
+  $('#qdNombre').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submit(); } });
+}
+
+function insertarLineaDialogo(idea, nombre){
+  const nombreUpper = nombre.toUpperCase();
+  const corte = { id: uid(), tipo:'transicion', texto: `CORTE A: ${nombreUpper}.` };
+  const dialogo = { id: uid(), tipo:'dialogo', texto: `${nombreUpper}: ` };
+  idea.bloques.push(corte, dialogo);
+  renderGuionTab(idea);
+  scheduleGuardarGuion();
+  focusBloque(dialogo.id, { alFinal:true });
+}
+
+function siguienteNumeroBeat(idea, regex){
+  let max = 0;
+  idea.bloques.forEach(b=>{
+    const m = (b.texto||'').match(regex);
+    if(m) max = Math.max(max, parseInt(m[1],10));
+  });
+  return max + 1;
+}
+
+function abrirModalNuevoBeat(idea){
+  const nextPar = siguienteNumeroBeat(idea, /PAR\s+(\d+)/i);
+  const nextBeat = siguienteNumeroBeat(idea, /BEAT\s+(\d+)/i);
+  openModal(`
+    <h3>Nuevo beat / escena</h3>
+    <div class="beat-presets">
+      <button class="btn btn-sm" id="bqColdOpen">Cold Open</button>
+      <button class="btn btn-sm" id="bqPar">Par ${nextPar}</button>
+      <button class="btn btn-sm" id="bqBeat">Beat ${nextBeat}</button>
+    </div>
+    <div class="field-group">
+      <label>O escribe tu propio encabezado</label>
+      <input type="text" id="bqTexto" placeholder="Ej: EXT. CANCHA - DÍA">
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="bqCancel">Cancelar</button>
+      <button class="btn btn-primary" id="bqOk">Agregar</button>
+    </div>`);
+  $('#bqCancel').onclick = closeModal;
+  $('#bqColdOpen').onclick = ()=>{ closeModal(); insertarBeat(idea, '[COLD OPEN]'); };
+  $('#bqPar').onclick = ()=>{ closeModal(); insertarBeat(idea, `[PAR ${nextPar} — TÍTULO]`, 'TÍTULO'); };
+  $('#bqBeat').onclick = ()=>{ closeModal(); insertarBeat(idea, `[BEAT ${nextBeat} — TÍTULO]`, 'TÍTULO'); };
+  const submitLibre = ()=>{
+    const t = $('#bqTexto').value.trim();
+    if(!t) return;
+    closeModal();
+    insertarBeat(idea, t);
+  };
+  $('#bqOk').onclick = submitLibre;
+  $('#bqTexto').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submitLibre(); }});
+}
+
+function insertarBeat(idea, texto, seleccionarTexto){
+  const bloque = { id: uid(), tipo:'escena', texto };
+  idea.bloques.push(bloque);
+  renderGuionTab(idea);
+  scheduleGuardarGuion();
+  focusBloque(bloque.id, seleccionarTexto ? { seleccionarTexto } : { alFinal:true });
+}
+
+/* ============ IMPORTAR TEXTO ============ */
+function abrirModalImportar(idea){
+  openModal(`
+    <h3>Importar guion desde texto</h3>
+    <p style="color:var(--text-dim);font-size:13px;margin:0 0 14px;">
+      Pega el texto de tu guion (de un PDF, Word o donde sea). Detecto solo los encabezados
+      [entre corchetes], líneas "CORTE...", "NOMBRE: diálogo" y paréntesis de acotación. Lo
+      que no reconozca lo marco como Acción — corrígelo después con el selector de cada bloque.
+    </p>
+    <div class="field-group">
+      <textarea id="importText" rows="10" placeholder="Pega aquí el texto completo..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="impCancel">Cancelar</button>
+      <button class="btn btn-primary" id="impOk">Convertir</button>
+    </div>`, true);
+  $('#impCancel').onclick = closeModal;
+  $('#impOk').onclick = ()=>{
+    const texto = $('#importText').value;
+    if(!texto.trim()){ showToast('Pega algo de texto primero','error'); return; }
+    const nuevosBloques = parsearTextoAGuion(texto);
+    if(!nuevosBloques.length){ showToast('No pude detectar contenido para convertir','error'); return; }
+    const aplicar = ()=>{
+      idea.bloques = nuevosBloques;
+      closeModal();
+      renderGuionTab(idea);
+      guardarGuionActual();
+      showToast('Guion importado — revisa y ajusta los bloques');
+    };
+    if(idea.bloques.length){
+      confirmDialog('Esto va a reemplazar el guion actual de esta idea. ¿Continuar?', aplicar);
+    } else {
+      aplicar();
+    }
+  };
+}
+
+function detectarTipoLinea(linea){
+  if(/^\[.*\]$/.test(linea)) return 'escena';
+  if(/^(INT|EXT)\.?\s/i.test(linea)) return 'escena';
+  if(/^corte\b/i.test(linea)) return 'transicion';
+  if(/^nota(\s+de\s+direcci[oó]n)?\s*:/i.test(linea)) return 'nota';
+  if(/^\(.+\)$/.test(linea)) return 'parentesis';
+  if(/^[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ0-9 .]{0,28}:\s*.+/.test(linea)) return 'dialogo';
+  if(/^[A-ZÁÉÍÓÚÑ0-9 .]{2,28}$/.test(linea) && linea === linea.toUpperCase()) return 'personaje';
+  return null;
+}
+
+function parsearTextoAGuion(texto){
+  const lineas = texto.replace(/\r\n/g,'\n').split('\n').map(l=>l.trim());
+  const bloques = [];
+  let bufferAccion = [];
+
+  function flushAccion(){
+    if(bufferAccion.length){
+      bloques.push({ id: uid(), tipo:'accion', texto: bufferAccion.join(' ') });
+      bufferAccion = [];
+    }
+  }
+
+  for(let i = 0; i < lineas.length; i++){
+    const linea = lineas[i];
+    if(!linea){ flushAccion(); continue; }
+    if(/^fin del sketch$/i.test(linea)){ flushAccion(); continue; }
+
+    const tipo = detectarTipoLinea(linea);
+
+    if(tipo === 'personaje'){
+      flushAccion();
+      bloques.push({ id: uid(), tipo:'personaje', texto: linea });
+      let j = i + 1;
+      while(j < lineas.length && !lineas[j]) j++;
+      if(j < lineas.length && /^\(.+\)$/.test(lineas[j])){
+        bloques.push({ id: uid(), tipo:'parentesis', texto: lineas[j] });
+        j++;
+      }
+      const dialogo = [];
+      while(j < lineas.length && lineas[j] && !detectarTipoLinea(lineas[j])){
+        dialogo.push(lineas[j]);
+        j++;
+      }
+      if(dialogo.length) bloques.push({ id: uid(), tipo:'dialogo', texto: dialogo.join(' ') });
+      i = j - 1;
+      continue;
+    }
+
+    if(tipo){
+      flushAccion();
+      bloques.push({ id: uid(), tipo, texto: linea });
+      continue;
+    }
+
+    bufferAccion.push(linea);
+  }
+  flushAccion();
+  return bloques;
+}
+
+function scheduleGuardarGuion(){
+  const idea = currentIdea();
+  setSaveState('Escribiendo...');
+  clearTimeout(state.saveTimer);
+  state.saveTimer = setTimeout(guardarGuionActual, 900);
+}
+async function guardarGuionActual(){
+  const idea = currentIdea();
+  if(!idea) return;
+  setSaveState('Guardando...');
+  try{
+    await apiPost('guardar_guion', {
+      id: idea.id, bloques: idea.bloques, guionElenco: idea.guionElenco,
+      guionFormato: idea.guionFormato, guionNotaDireccion: idea.guionNotaDireccion,
+      guionVersion: idea.guionVersion, token: state.token
+    });
+    idea.fechaActualizacion = new Date().toISOString();
+    recategorizar(idea);
+    setSaveState('Guardado');
+    renderSidebarLists($('#buscador').value);
+    const badge = $('.badge');
+    if(badge){ badge.className = 'badge badge-'+idea.categoria; badge.textContent = CAT_LABEL[idea.categoria]; }
+    const exportBtn = $('#btnExportar');
+    if(exportBtn) exportBtn.disabled = idea.bloques.length===0;
+  }catch(err){
+    setSaveState('Error al guardar');
+    showToast(err.message,'error');
+  }
+}
+
+/* ============ EXPORTAR PDF ============ */
+async function exportarPdfActual(){
+  const idea = currentIdea();
+  if(!idea.bloques.length){ showToast('Agrega contenido al guion primero','error'); return; }
+  const btn = $('#btnExportar');
+  const original = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando...';
+  try{
+    const res = await apiPost('exportar_pdf', {
+      id: idea.id, titulo: idea.titulo, bloques: idea.bloques, guionElenco: idea.guionElenco,
+      guionFormato: idea.guionFormato, guionNotaDireccion: idea.guionNotaDireccion,
+      guionVersion: idea.guionVersion, token: state.token
+    });
+    idea.pdfUrl = res.url;
+    showToast('PDF guardado en Drive');
+    window.open(res.url, '_blank');
+  }catch(err){
+    showToast(err.message,'error');
+  }finally{
+    btn.disabled = false; btn.innerHTML = original;
+  }
+}
+</script>
+</body>
+</html>
